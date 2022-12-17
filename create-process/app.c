@@ -3,39 +3,38 @@
 #include <stdlib.h>
 #include <sys/wait.h>
 
-int main ()
+int main()
 {
-  pid_t retornoFork ;
+  pid_t forkReturn;
 
-  printf ("Ola, sou o processo Pai inicial %5d\n", getpid()) ;
+  printf("Hello, I'm the initial PARENT process %5d\n", getpid());
 
-  printf("antes do fork () \n");
+  printf("Before: fork() \n");
 
-  retornoFork = fork () ; // retorna: valor<0 para erro; 0 para processo filho e valor>0 para processo pai
-  printf("Após fork()  \n");
+  forkReturn = fork(); // value < 0 -> Error || value = 0 -> CHILD process || value > 0 -> PARENT process
 
-  printf ("[retornoFork=%5d] sou o processo ID=%5d, filho de ID=%5d\n", retornoFork, getpid(), getppid()) ;
+  printf("After: fork() \n");
 
+  printf("[forkReturn=%5d] I'm the process of ID=%5d, child of ID=%5d\n", forkReturn, getpid(), getppid());
 
-  if ( retornoFork < 0 )
+  if (forkReturn < 0)
   {
-    perror ("Erro") ;
-    exit (1) ;
+    perror("Error");
+    exit(1);
+  }
+  else if (forkReturn > 0)
+  {
+    // wait(0);
+    printf("I'm the PARENT process running -- ");
+    printf("product result of multiplication: %d *** ", 3 * 3);
   }
   else
-    if ( retornoFork > 0 ) {
-        wait(0);
-        printf("Sou o processo pai executando -- ");
-        printf ("resultado do PRODUTO: %d ***",3*3);
+  {
+    sleep(5);
+    printf("I'm the CHILD process running -- ");
+    printf("sum result of addition: %d *** ", 2 + 2);
+  }
 
-        }
-    else {
-        sleep (5) ;
-        printf("Sou o processo filho executando -- ");
-        printf ("resultado da SOMA: %d ***",2+2) ;
-
-        }
-
-  printf ("Término do processo ID=%5d!\n", getpid()) ;
-  exit (0) ;
+  printf("End of process ID=%5d!\n", getpid());
+  exit(0);
 }
